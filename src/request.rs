@@ -273,19 +273,6 @@ impl HttpRequest {
         Ok(request)
     } 
 
-    async fn read_chunk<R: AsyncReadExt + Unpin>(conn: &mut R) -> Result<Vec<u8>> {
-        // read first two chars
-        let mut hex_bytes = [0u8; 2];
-        conn.read_exact(&mut hex_bytes).await?;
-        let hex_str = String::from_utf8_lossy(&hex_bytes).to_string();
-        let len = usize::from_str_radix(&hex_str, 16)?;
-
-        // read the rest of the chunk
-        let mut result = vec![0u8; len];
-        conn.read_exact(&mut result).await?;
-
-        Ok(result)
-    }
 }
 
 impl fmt::Display for HttpRequest {

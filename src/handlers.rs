@@ -84,6 +84,9 @@ pub async fn video_handler(writer: &mut ResponseWriter, _req: &HttpRequest) -> R
     let mut file_buffer = [0u8; 512];
     let mut body_copy = Vec::new();
     while let Ok(n) = f.read(&mut file_buffer).await {
+        if n == 0 {
+            break;
+        }
         println!("Forwarding video chunk of size {}", &file_buffer[..n].len());
         body_copy.extend_from_slice(&file_buffer[..n]);
 
